@@ -1,0 +1,3 @@
+/home/wa/桌面/race/build/CMakeFiles/INCAR.RUN.dir
+/home/wa/桌面/race/build/CMakeFiles/edit_cache.dir
+/home/wa/桌面/race/build/CMakeFiles/rebuild_cache.dir

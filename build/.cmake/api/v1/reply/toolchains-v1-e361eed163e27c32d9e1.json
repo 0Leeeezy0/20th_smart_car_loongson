@@ -1,0 +1,115 @@
+{
+	"kind" : "toolchains",
+	"toolchains" : 
+	[
+		{
+			"compiler" : 
+			{
+				"id" : "GNU",
+				"implicit" : 
+				{
+					"includeDirectories" : 
+					[
+						"/opt/loongson-gnu-toolchain-8.3-x86_64/lib/gcc/loongarch64-linux-gnu/8.3.0/include",
+						"/opt/loongson-gnu-toolchain-8.3-x86_64/lib/gcc/loongarch64-linux-gnu/8.3.0/include-fixed",
+						"/opt/loongson-gnu-toolchain-8.3-x86_64/loongarch64-linux-gnu/include",
+						"/opt/loongson-gnu-toolchain-8.3-x86_64/loongarch64-linux-gnu/sysroot/usr/include"
+					],
+					"linkDirectories" : 
+					[
+						"/opt/loongson-gnu-toolchain-8.3-x86_64/lib/gcc/loongarch64-linux-gnu/8.3.0",
+						"/opt/loongson-gnu-toolchain-8.3-x86_64/lib/gcc",
+						"/opt/loongson-gnu-toolchain-8.3-x86_64/loongarch64-linux-gnu/sysroot/lib64",
+						"/opt/loongson-gnu-toolchain-8.3-x86_64/loongarch64-linux-gnu/sysroot/usr/lib64",
+						"/opt/loongson-gnu-toolchain-8.3-x86_64/loongarch64-linux-gnu/lib",
+						"/opt/loongson-gnu-toolchain-8.3-x86_64/loongarch64-linux-gnu/sysroot/lib",
+						"/opt/loongson-gnu-toolchain-8.3-x86_64/loongarch64-linux-gnu/sysroot/usr/lib"
+					],
+					"linkFrameworkDirectories" : [],
+					"linkLibraries" : 
+					[
+						"gcc",
+						"gcc_s",
+						"c",
+						"gcc",
+						"gcc_s"
+					]
+				},
+				"path" : "/opt/loongson-gnu-toolchain-8.3-x86_64/bin/loongarch64-linux-gnu-gcc",
+				"version" : "8.3.0"
+			},
+			"language" : "C",
+			"sourceFileExtensions" : 
+			[
+				"c",
+				"m"
+			]
+		},
+		{
+			"compiler" : 
+			{
+				"id" : "GNU",
+				"implicit" : 
+				{
+					"includeDirectories" : 
+					[
+						"/opt/loongson-gnu-toolchain-8.3-x86_64/lib/gcc/loongarch64-linux-gnu/8.3.0/include",
+						"/opt/loongson-gnu-toolchain-8.3-x86_64/lib/gcc/loongarch64-linux-gnu/8.3.0/include-fixed",
+						"/opt/loongson-gnu-toolchain-8.3-x86_64/loongarch64-linux-gnu/include",
+						"/opt/loongson-gnu-toolchain-8.3-x86_64/loongarch64-linux-gnu/sysroot/usr/include/c++/8.3.0",
+						"/opt/loongson-gnu-toolchain-8.3-x86_64/loongarch64-linux-gnu/sysroot/usr/include/c++/8.3.0/loongarch64-linux-gnu",
+						"/opt/loongson-gnu-toolchain-8.3-x86_64/loongarch64-linux-gnu/sysroot/usr/include/c++/8.3.0/backward",
+						"/opt/loongson-gnu-toolchain-8.3-x86_64/loongarch64-linux-gnu/sysroot/usr/include"
+					],
+					"linkDirectories" : 
+					[
+						"/opt/loongson-gnu-toolchain-8.3-x86_64/lib/gcc/loongarch64-linux-gnu/8.3.0",
+						"/opt/loongson-gnu-toolchain-8.3-x86_64/lib/gcc",
+						"/opt/loongson-gnu-toolchain-8.3-x86_64/loongarch64-linux-gnu/sysroot/lib64",
+						"/opt/loongson-gnu-toolchain-8.3-x86_64/loongarch64-linux-gnu/sysroot/usr/lib64",
+						"/opt/loongson-gnu-toolchain-8.3-x86_64/loongarch64-linux-gnu/lib",
+						"/opt/loongson-gnu-toolchain-8.3-x86_64/loongarch64-linux-gnu/sysroot/lib",
+						"/opt/loongson-gnu-toolchain-8.3-x86_64/loongarch64-linux-gnu/sysroot/usr/lib"
+					],
+					"linkFrameworkDirectories" : [],
+					"linkLibraries" : 
+					[
+						"stdc++",
+						"m",
+						"gcc_s",
+						"gcc",
+						"pthread",
+						"c",
+						"gcc_s",
+						"gcc"
+					]
+				},
+				"path" : "/opt/loongson-gnu-toolchain-8.3-x86_64/bin/loongarch64-linux-gnu-g++",
+				"version" : "8.3.0"
+			},
+			"language" : "CXX",
+			"sourceFileExtensions" : 
+			[
+				"C",
+				"M",
+				"c++",
+				"cc",
+				"cpp",
+				"cxx",
+				"mm",
+				"mpp",
+				"CPP",
+				"ixx",
+				"cppm",
+				"ccm",
+				"cxxm",
+				"c++m"
+			]
+		}
+	],
+	"version" : 
+	{
+		"major" : 1,
+		"minor" : 0
+	}
+}

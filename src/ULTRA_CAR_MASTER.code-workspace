@@ -1,0 +1,16 @@
+{
+	"folders": [
+		{
+			"path": ".."
+		},
+		{
+			"path": "../../../LazyBug"
+		}
+	],
+	"settings": {
+		"files.associations": {
+			"cmath": "cpp",
+			"complex": "cpp"
+		}
+	}
+}
