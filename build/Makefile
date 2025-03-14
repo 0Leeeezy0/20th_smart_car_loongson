@@ -57,18 +57,18 @@ RM = /usr/bin/cmake -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/wa/桌面/race
+CMAKE_SOURCE_DIR = "/home/Sharespace/LOONGSON(NEW)/LOONGSON"
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/wa/桌面/race/build
+CMAKE_BINARY_DIR = "/home/Sharespace/LOONGSON(NEW)/LOONGSON/build"
 
 #=============================================================================
 # Targets provided globally by CMake.
 
 # Special rule for the target edit_cache
 edit_cache:
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --cyan "Running CMake cache editor..."
-	/usr/bin/ccmake -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --cyan "No interactive CMake dialog available..."
+	/usr/bin/cmake -E echo No\ interactive\ CMake\ dialog\ available.
 .PHONY : edit_cache
 
 # Special rule for the target edit_cache
@@ -87,9 +87,9 @@ rebuild_cache/fast: rebuild_cache
 
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/wa/桌面/race/build/CMakeFiles /home/wa/桌面/race/build//CMakeFiles/progress.marks
+	$(CMAKE_COMMAND) -E cmake_progress_start "/home/Sharespace/LOONGSON(NEW)/LOONGSON/build/CMakeFiles" "/home/Sharespace/LOONGSON(NEW)/LOONGSON/build//CMakeFiles/progress.marks"
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/wa/桌面/race/build/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start "/home/Sharespace/LOONGSON(NEW)/LOONGSON/build/CMakeFiles" 0
 .PHONY : all
 
 # The main clean target
@@ -117,144 +117,120 @@ depend:
 .PHONY : depend
 
 #=============================================================================
-# Target rules for targets named INCAR.RUN
+# Target rules for targets named LOONGSON
 
 # Build rule for target.
-INCAR.RUN: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 INCAR.RUN
-.PHONY : INCAR.RUN
+LOONGSON: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 LOONGSON
+.PHONY : LOONGSON
 
 # fast build rule for target.
-INCAR.RUN/fast:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/INCAR.RUN.dir/build.make CMakeFiles/INCAR.RUN.dir/build
-.PHONY : INCAR.RUN/fast
+LOONGSON/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/LOONGSON.dir/build.make CMakeFiles/LOONGSON.dir/build
+.PHONY : LOONGSON/fast
 
-lib/control/motor.o: lib/control/motor.cpp.o
-.PHONY : lib/control/motor.o
-
-# target to build an object file
-lib/control/motor.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/INCAR.RUN.dir/build.make CMakeFiles/INCAR.RUN.dir/lib/control/motor.cpp.o
-.PHONY : lib/control/motor.cpp.o
-
-lib/control/motor.i: lib/control/motor.cpp.i
-.PHONY : lib/control/motor.i
-
-# target to preprocess a source file
-lib/control/motor.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/INCAR.RUN.dir/build.make CMakeFiles/INCAR.RUN.dir/lib/control/motor.cpp.i
-.PHONY : lib/control/motor.cpp.i
-
-lib/control/motor.s: lib/control/motor.cpp.s
-.PHONY : lib/control/motor.s
-
-# target to generate assembly for a file
-lib/control/motor.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/INCAR.RUN.dir/build.make CMakeFiles/INCAR.RUN.dir/lib/control/motor.cpp.s
-.PHONY : lib/control/motor.cpp.s
-
-lib/control/register.o: lib/control/register.cpp.o
-.PHONY : lib/control/register.o
+lib/config.o: lib/config.cpp.o
+.PHONY : lib/config.o
 
 # target to build an object file
-lib/control/register.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/INCAR.RUN.dir/build.make CMakeFiles/INCAR.RUN.dir/lib/control/register.cpp.o
-.PHONY : lib/control/register.cpp.o
+lib/config.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/LOONGSON.dir/build.make CMakeFiles/LOONGSON.dir/lib/config.cpp.o
+.PHONY : lib/config.cpp.o
 
-lib/control/register.i: lib/control/register.cpp.i
-.PHONY : lib/control/register.i
+lib/config.i: lib/config.cpp.i
+.PHONY : lib/config.i
 
 # target to preprocess a source file
-lib/control/register.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/INCAR.RUN.dir/build.make CMakeFiles/INCAR.RUN.dir/lib/control/register.cpp.i
-.PHONY : lib/control/register.cpp.i
+lib/config.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/LOONGSON.dir/build.make CMakeFiles/LOONGSON.dir/lib/config.cpp.i
+.PHONY : lib/config.cpp.i
 
-lib/control/register.s: lib/control/register.cpp.s
-.PHONY : lib/control/register.s
+lib/config.s: lib/config.cpp.s
+.PHONY : lib/config.s
 
 # target to generate assembly for a file
-lib/control/register.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/INCAR.RUN.dir/build.make CMakeFiles/INCAR.RUN.dir/lib/control/register.cpp.s
-.PHONY : lib/control/register.cpp.s
+lib/config.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/LOONGSON.dir/build.make CMakeFiles/LOONGSON.dir/lib/config.cpp.s
+.PHONY : lib/config.cpp.s
 
-lib/control/steer.o: lib/control/steer.cpp.o
-.PHONY : lib/control/steer.o
+lib/control.o: lib/control.cpp.o
+.PHONY : lib/control.o
 
 # target to build an object file
-lib/control/steer.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/INCAR.RUN.dir/build.make CMakeFiles/INCAR.RUN.dir/lib/control/steer.cpp.o
-.PHONY : lib/control/steer.cpp.o
+lib/control.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/LOONGSON.dir/build.make CMakeFiles/LOONGSON.dir/lib/control.cpp.o
+.PHONY : lib/control.cpp.o
 
-lib/control/steer.i: lib/control/steer.cpp.i
-.PHONY : lib/control/steer.i
+lib/control.i: lib/control.cpp.i
+.PHONY : lib/control.i
 
 # target to preprocess a source file
-lib/control/steer.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/INCAR.RUN.dir/build.make CMakeFiles/INCAR.RUN.dir/lib/control/steer.cpp.i
-.PHONY : lib/control/steer.cpp.i
+lib/control.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/LOONGSON.dir/build.make CMakeFiles/LOONGSON.dir/lib/control.cpp.i
+.PHONY : lib/control.cpp.i
 
-lib/control/steer.s: lib/control/steer.cpp.s
-.PHONY : lib/control/steer.s
+lib/control.s: lib/control.cpp.s
+.PHONY : lib/control.s
 
 # target to generate assembly for a file
-lib/control/steer.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/INCAR.RUN.dir/build.make CMakeFiles/INCAR.RUN.dir/lib/control/steer.cpp.s
-.PHONY : lib/control/steer.cpp.s
+lib/control.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/LOONGSON.dir/build.make CMakeFiles/LOONGSON.dir/lib/control.cpp.s
+.PHONY : lib/control.cpp.s
 
-lib/libdata_process.o: lib/libdata_process.cpp.o
-.PHONY : lib/libdata_process.o
+lib/register.o: lib/register.cpp.o
+.PHONY : lib/register.o
 
 # target to build an object file
-lib/libdata_process.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/INCAR.RUN.dir/build.make CMakeFiles/INCAR.RUN.dir/lib/libdata_process.cpp.o
-.PHONY : lib/libdata_process.cpp.o
+lib/register.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/LOONGSON.dir/build.make CMakeFiles/LOONGSON.dir/lib/register.cpp.o
+.PHONY : lib/register.cpp.o
 
-lib/libdata_process.i: lib/libdata_process.cpp.i
-.PHONY : lib/libdata_process.i
+lib/register.i: lib/register.cpp.i
+.PHONY : lib/register.i
 
 # target to preprocess a source file
-lib/libdata_process.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/INCAR.RUN.dir/build.make CMakeFiles/INCAR.RUN.dir/lib/libdata_process.cpp.i
-.PHONY : lib/libdata_process.cpp.i
+lib/register.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/LOONGSON.dir/build.make CMakeFiles/LOONGSON.dir/lib/register.cpp.i
+.PHONY : lib/register.cpp.i
 
-lib/libdata_process.s: lib/libdata_process.cpp.s
-.PHONY : lib/libdata_process.s
+lib/register.s: lib/register.cpp.s
+.PHONY : lib/register.s
 
 # target to generate assembly for a file
-lib/libdata_process.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/INCAR.RUN.dir/build.make CMakeFiles/INCAR.RUN.dir/lib/libdata_process.cpp.s
-.PHONY : lib/libdata_process.cpp.s
+lib/register.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/LOONGSON.dir/build.make CMakeFiles/LOONGSON.dir/lib/register.cpp.s
+.PHONY : lib/register.cpp.s
 
-lib/libimage_process.o: lib/libimage_process.cpp.o
-.PHONY : lib/libimage_process.o
+lib/track.o: lib/track.cpp.o
+.PHONY : lib/track.o
 
 # target to build an object file
-lib/libimage_process.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/INCAR.RUN.dir/build.make CMakeFiles/INCAR.RUN.dir/lib/libimage_process.cpp.o
-.PHONY : lib/libimage_process.cpp.o
+lib/track.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/LOONGSON.dir/build.make CMakeFiles/LOONGSON.dir/lib/track.cpp.o
+.PHONY : lib/track.cpp.o
 
-lib/libimage_process.i: lib/libimage_process.cpp.i
-.PHONY : lib/libimage_process.i
+lib/track.i: lib/track.cpp.i
+.PHONY : lib/track.i
 
 # target to preprocess a source file
-lib/libimage_process.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/INCAR.RUN.dir/build.make CMakeFiles/INCAR.RUN.dir/lib/libimage_process.cpp.i
-.PHONY : lib/libimage_process.cpp.i
+lib/track.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/LOONGSON.dir/build.make CMakeFiles/LOONGSON.dir/lib/track.cpp.i
+.PHONY : lib/track.cpp.i
 
-lib/libimage_process.s: lib/libimage_process.cpp.s
-.PHONY : lib/libimage_process.s
+lib/track.s: lib/track.cpp.s
+.PHONY : lib/track.s
 
 # target to generate assembly for a file
-lib/libimage_process.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/INCAR.RUN.dir/build.make CMakeFiles/INCAR.RUN.dir/lib/libimage_process.cpp.s
-.PHONY : lib/libimage_process.cpp.s
+lib/track.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/LOONGSON.dir/build.make CMakeFiles/LOONGSON.dir/lib/track.cpp.s
+.PHONY : lib/track.cpp.s
 
 src/main.o: src/main.cpp.o
 .PHONY : src/main.o
 
 # target to build an object file
 src/main.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/INCAR.RUN.dir/build.make CMakeFiles/INCAR.RUN.dir/src/main.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/LOONGSON.dir/build.make CMakeFiles/LOONGSON.dir/src/main.cpp.o
 .PHONY : src/main.cpp.o
 
 src/main.i: src/main.cpp.i
@@ -262,7 +238,7 @@ src/main.i: src/main.cpp.i
 
 # target to preprocess a source file
 src/main.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/INCAR.RUN.dir/build.make CMakeFiles/INCAR.RUN.dir/src/main.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/LOONGSON.dir/build.make CMakeFiles/LOONGSON.dir/src/main.cpp.i
 .PHONY : src/main.cpp.i
 
 src/main.s: src/main.cpp.s
@@ -270,80 +246,8 @@ src/main.s: src/main.cpp.s
 
 # target to generate assembly for a file
 src/main.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/INCAR.RUN.dir/build.make CMakeFiles/INCAR.RUN.dir/src/main.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/LOONGSON.dir/build.make CMakeFiles/LOONGSON.dir/src/main.cpp.s
 .PHONY : src/main.cpp.s
-
-src/path_across.o: src/path_across.cpp.o
-.PHONY : src/path_across.o
-
-# target to build an object file
-src/path_across.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/INCAR.RUN.dir/build.make CMakeFiles/INCAR.RUN.dir/src/path_across.cpp.o
-.PHONY : src/path_across.cpp.o
-
-src/path_across.i: src/path_across.cpp.i
-.PHONY : src/path_across.i
-
-# target to preprocess a source file
-src/path_across.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/INCAR.RUN.dir/build.make CMakeFiles/INCAR.RUN.dir/src/path_across.cpp.i
-.PHONY : src/path_across.cpp.i
-
-src/path_across.s: src/path_across.cpp.s
-.PHONY : src/path_across.s
-
-# target to generate assembly for a file
-src/path_across.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/INCAR.RUN.dir/build.make CMakeFiles/INCAR.RUN.dir/src/path_across.cpp.s
-.PHONY : src/path_across.cpp.s
-
-src/path_circle.o: src/path_circle.cpp.o
-.PHONY : src/path_circle.o
-
-# target to build an object file
-src/path_circle.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/INCAR.RUN.dir/build.make CMakeFiles/INCAR.RUN.dir/src/path_circle.cpp.o
-.PHONY : src/path_circle.cpp.o
-
-src/path_circle.i: src/path_circle.cpp.i
-.PHONY : src/path_circle.i
-
-# target to preprocess a source file
-src/path_circle.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/INCAR.RUN.dir/build.make CMakeFiles/INCAR.RUN.dir/src/path_circle.cpp.i
-.PHONY : src/path_circle.cpp.i
-
-src/path_circle.s: src/path_circle.cpp.s
-.PHONY : src/path_circle.s
-
-# target to generate assembly for a file
-src/path_circle.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/INCAR.RUN.dir/build.make CMakeFiles/INCAR.RUN.dir/src/path_circle.cpp.s
-.PHONY : src/path_circle.cpp.s
-
-src/path_side_search.o: src/path_side_search.cpp.o
-.PHONY : src/path_side_search.o
-
-# target to build an object file
-src/path_side_search.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/INCAR.RUN.dir/build.make CMakeFiles/INCAR.RUN.dir/src/path_side_search.cpp.o
-.PHONY : src/path_side_search.cpp.o
-
-src/path_side_search.i: src/path_side_search.cpp.i
-.PHONY : src/path_side_search.i
-
-# target to preprocess a source file
-src/path_side_search.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/INCAR.RUN.dir/build.make CMakeFiles/INCAR.RUN.dir/src/path_side_search.cpp.i
-.PHONY : src/path_side_search.cpp.i
-
-src/path_side_search.s: src/path_side_search.cpp.s
-.PHONY : src/path_side_search.s
-
-# target to generate assembly for a file
-src/path_side_search.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/INCAR.RUN.dir/build.make CMakeFiles/INCAR.RUN.dir/src/path_side_search.cpp.s
-.PHONY : src/path_side_search.cpp.s
 
 # Help Target
 help:
@@ -353,34 +257,22 @@ help:
 	@echo "... depend"
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
-	@echo "... INCAR.RUN"
-	@echo "... lib/control/motor.o"
-	@echo "... lib/control/motor.i"
-	@echo "... lib/control/motor.s"
-	@echo "... lib/control/register.o"
-	@echo "... lib/control/register.i"
-	@echo "... lib/control/register.s"
-	@echo "... lib/control/steer.o"
-	@echo "... lib/control/steer.i"
-	@echo "... lib/control/steer.s"
-	@echo "... lib/libdata_process.o"
-	@echo "... lib/libdata_process.i"
-	@echo "... lib/libdata_process.s"
-	@echo "... lib/libimage_process.o"
-	@echo "... lib/libimage_process.i"
-	@echo "... lib/libimage_process.s"
+	@echo "... LOONGSON"
+	@echo "... lib/config.o"
+	@echo "... lib/config.i"
+	@echo "... lib/config.s"
+	@echo "... lib/control.o"
+	@echo "... lib/control.i"
+	@echo "... lib/control.s"
+	@echo "... lib/register.o"
+	@echo "... lib/register.i"
+	@echo "... lib/register.s"
+	@echo "... lib/track.o"
+	@echo "... lib/track.i"
+	@echo "... lib/track.s"
 	@echo "... src/main.o"
 	@echo "... src/main.i"
 	@echo "... src/main.s"
-	@echo "... src/path_across.o"
-	@echo "... src/path_across.i"
-	@echo "... src/path_across.s"
-	@echo "... src/path_circle.o"
-	@echo "... src/path_circle.i"
-	@echo "... src/path_circle.s"
-	@echo "... src/path_side_search.o"
-	@echo "... src/path_side_search.i"
-	@echo "... src/path_side_search.s"
 .PHONY : help
 
 

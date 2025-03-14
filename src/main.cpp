@@ -1,147 +1,193 @@
-#include "common_system.h"
-#include "common_program.h"
-#include "base.h"
-#include "motor.h"
-#include "steer.h"
-#include "register.h"
+#include "opencv2/opencv.hpp"
+#include <iostream>
+#include "common.h"
+#include "control.h"
+#include "track.h"
+#include "config.h"
 
 using namespace std;
 using namespace cv;
+using namespace LOONGSON;
 
-int main()
+extern int path[SEARCH_START-SEARCH_END+1][2];
+extern int L_Side[IMAGE_HEIGHT*4][2];
+extern int R_Side[IMAGE_HEIGHT*4][2];
+extern int L_SidePointNum;
+extern int R_SidePointNum;
+extern int L_InflectionPoint[IMAGE_HEIGHT*2][2];
+extern int R_InflectionPoint[IMAGE_HEIGHT*2][2];
+extern int L_InflectionPointNum;
+extern int R_InflectionPointNum;
+extern int L_BendPoint[IMAGE_HEIGHT*2][2];
+extern int R_BendPoint[IMAGE_HEIGHT*2][2];
+extern int L_BendPointNum;
+extern int R_BendPointNum;
+Mat imgColor;
+Mat imgGray;
+Mat imgOTSU;
+
+int main(void)
 {
-    // 类定义
-    ImgProcess ImgProcess;
-    Judge Judge;
-    SYNC SYNC;
+    VideoCapture camera;
+    camera.open("/dev/video0", CAP_V4L2);
+    if(!camera.isOpened())
+        camera.open("/dev/video1", CAP_V4L2);
+    if(!camera.isOpened())
+        camera.open("/dev/video2", CAP_V4L2);
+    if(!camera.isOpened())
+        camera.open("/dev/video3", CAP_V4L2);
+    if(!camera.isOpened())
+        camera.open("/dev/video4", CAP_V4L2);
+    camera.set(CAP_PROP_FRAME_WIDTH, 320);
+    camera.set(CAP_PROP_FRAME_HEIGHT, 240);
+    camera.set(CAP_PROP_FOURCC, VideoWriter::fourcc('M', 'J', 'P', 'G'));
+    camera.set(CAP_PROP_FPS, 90);
 
-    // 数据结构体指针定义
-    Img_Store Img_Store_c; 
-    Img_Store *Img_Store_p = &Img_Store_c;
-    Function_EN Function_EN_c;
-    Function_EN *Function_EN_p = &Function_EN_c;
-    Data_Path Data_Path_c;
-    Data_Path *Data_Path_p = &Data_Path_c;
+    Motor motor_L("pwmchip1", 73, false);
+    Motor motor_R("pwmchip2", 72, true);
+    Servo servo(89);
+    // Encoder encoder_L(0, 51);
+    // Encoder encoder_R(3, 50);
 
-    // 参数获取
-    SYNC.ConfigData_SYNC(Data_Path_p,Function_EN_p);
-    JSON_FunctionConfigData JSON_FunctionConfigData = Function_EN_p -> JSON_FunctionConfigData_v[0];
-    JSON_TrackConfigData JSON_TrackConfigData = Data_Path_p -> JSON_TrackConfigData_v[0];
+    Config config("../configs/config.json");
+    config.readJSON();
 
-    // PWM初始化
-    init_pwm();
-    PWM_GTIM L_motor(88, 0b11, 2, 10000, 0); 
-    L_motor.enable();
-    PWM_GTIM R_motor(89, 0b11, 3, 10000, 0);
-    R_motor.enable();
-    init_gpio_motor_dir();//电机方向脚初始化
-    L_motor.setPeriod(10000);  
-    R_motor.setPeriod(10000);
+    PID PID_Servo(PID::POSITIONAL);
+    PID_Servo.outputLimit = 13;
+    PID_Servo.iLimit = 2;
 
-    // 摄像头初始化
-    VideoCapture Camera; // 定义相机
-    CameraInit(Camera,JSON_FunctionConfigData.Camera_EN,120);
-    // 开启摄像头图像获取线程
-    thread CameraImgCapture (CameraImgGetThread,ref(Camera),ref(Img_Store_p));
-    CameraImgCapture.detach();
-    
-    Function_EN_p -> Game_EN = true;
-    Function_EN_p -> Loop_Kind_EN = CAMERA_CATCH_LOOP;
+    Size size = Size(IMAGE_WIDTH, IMAGE_HEIGHT);
 
-    sleep(1);   // 延时1S等待第一帧模型推理完成
+    VideoWriter video;
+    video.open("../img/sample.avi",VideoWriter::fourcc('M','J','P','G'),25,size,true);
 
-    while(Function_EN_p -> Game_EN == true)
-    {   
-        // 图像主循环
-        while( Function_EN_p -> Loop_Kind_EN == CAMERA_CATCH_LOOP)
+    int err;
+    int frameCount = 0;
+
+    while(1)
+    {
+        camera>>imgColor;
+        resize(imgColor, imgColor, size, 0, 0, INTER_AREA);
+        cvtColor(imgColor, imgGray, COLOR_BGR2GRAY);
+        threshold(imgGray, imgOTSU, 0, 255, THRESH_BINARY | THRESH_OTSU);
+
+        cout << "a" << endl;
+
+        line(imgColor,Point(0,SEARCH_START),Point(IMAGE_WIDTH-1,SEARCH_START),Scalar(0,0,0),1);
+        line(imgColor,Point(0,SEARCH_END),Point(IMAGE_WIDTH-1,SEARCH_END),Scalar(0,0,0),1);
+        line(imgColor,Point(SIDE_END,SEARCH_START),Point(SIDE_END,SEARCH_END),Scalar(0,0,0),1);
+        line(imgColor,Point(IMAGE_WIDTH-SIDE_END,SEARCH_START),Point(IMAGE_WIDTH-SIDE_END,SEARCH_END),Scalar(0,0,0),1);
+
+        sideExtract();
+        pointKindJudge();
+        if(L_InflectionPointNum >= 2 && R_InflectionPointNum >= 2)
         {
-            // 前瞻点初始化
-            Data_Path_p -> JSON_TrackConfigData_v[0].Forward = Data_Path_p -> JSON_TrackConfigData_v[0].Default_Forward;
+            trackLine(L_InflectionPoint[0][0], L_InflectionPoint[0][1], L_InflectionPoint[1][0], L_InflectionPoint[1][1]);
+            trackLine(R_InflectionPoint[0][0], R_InflectionPoint[0][1], R_InflectionPoint[1][0], R_InflectionPoint[1][1]);
+            trackLine(L_InflectionPoint[0][0], L_InflectionPoint[0][1], 0, IMAGE_HEIGHT-1);
+            trackLine(R_InflectionPoint[0][0], R_InflectionPoint[0][1], IMAGE_WIDTH-1, IMAGE_HEIGHT-1);
+        }
+        else if(L_InflectionPointNum == 1 && R_InflectionPointNum >= 2)
+        {
+            if(R_InflectionPoint[1][0]-TRACK_WIDTH >= 0)
+            {
+                trackLine(L_InflectionPoint[0][0], L_InflectionPoint[0][1], R_InflectionPoint[1][0]-TRACK_WIDTH, R_InflectionPoint[1][1]);
+                trackLine(R_InflectionPoint[0][0], R_InflectionPoint[0][1], R_InflectionPoint[1][0], R_InflectionPoint[1][1]);
+                trackLine(L_InflectionPoint[0][0], L_InflectionPoint[0][1], 0, IMAGE_HEIGHT-1);
+                trackLine(R_InflectionPoint[0][0], R_InflectionPoint[0][1], IMAGE_WIDTH-1, IMAGE_HEIGHT-1);
+            }
+        }
+        else if(L_InflectionPointNum >= 2 && R_InflectionPointNum == 1)
+        {
+            if(L_InflectionPoint[1][0]+TRACK_WIDTH < IMAGE_WIDTH)
+            {
+                trackLine(L_InflectionPoint[0][0], L_InflectionPoint[0][1], L_InflectionPoint[1][0], L_InflectionPoint[1][1]);
+                trackLine(R_InflectionPoint[0][0], R_InflectionPoint[0][1], L_InflectionPoint[1][0]+TRACK_WIDTH, L_InflectionPoint[1][1]);
+                trackLine(L_InflectionPoint[0][0], L_InflectionPoint[0][1], 0, IMAGE_HEIGHT-1);
+                trackLine(R_InflectionPoint[0][0], R_InflectionPoint[0][1], IMAGE_WIDTH-1, IMAGE_HEIGHT-1);
+            }
+        }
+        else if(L_InflectionPointNum >= 2 && R_InflectionPointNum == 0)
+        {
+            trackLine(L_InflectionPoint[0][0], L_InflectionPoint[0][1], L_InflectionPoint[1][0], L_InflectionPoint[1][1]);
+            trackLine(L_InflectionPoint[0][0], L_InflectionPoint[0][1], 0, IMAGE_HEIGHT-1);
+        }
+        else if(L_InflectionPointNum == 0 && R_InflectionPointNum >= 2)
+        {
+            trackLine(R_InflectionPoint[0][0], R_InflectionPoint[0][1], R_InflectionPoint[1][0], R_InflectionPoint[1][1]);
+            trackLine(R_InflectionPoint[0][0], R_InflectionPoint[0][1], IMAGE_WIDTH-1, IMAGE_HEIGHT-1);
+        }
+        else if(L_InflectionPointNum == 1 && R_InflectionPointNum == 1)
+        {
+            trackLine(L_InflectionPoint[0][0], L_InflectionPoint[0][1], IMAGE_WIDTH/2-TRACK_WIDTH/2, 0);
+            trackLine(R_InflectionPoint[0][0], R_InflectionPoint[0][1], IMAGE_WIDTH/2+TRACK_WIDTH/2, 0);
+            trackLine(L_InflectionPoint[0][0], L_InflectionPoint[0][1], 0, IMAGE_HEIGHT-1);
+            trackLine(R_InflectionPoint[0][0], R_InflectionPoint[0][1], IMAGE_WIDTH-1, IMAGE_HEIGHT-1);
+        }
+        else if(L_InflectionPointNum == 0 && R_InflectionPointNum == 1)
+        {
+            /* R_CIRCLE */
+        }
+        else if(L_InflectionPointNum == 1 && R_InflectionPointNum == 0)
+        {
+            /* L_CIRCLE */
+        }
+        pathExtract();
 
-            CameraImgGet(Img_Store_p);
-            // (Img_Store_p -> Img_Color) = (Img_Store_p -> Img_Capture).clone();
-            ImgProcess.ImgCompress(Img_Store_p -> Img_Color,JSON_FunctionConfigData.ImgCompress_EN);
-            ImgProcess.ImgPrepare(Img_Store_p,Data_Path_p,Function_EN_p); // 图像预处理
+        err = path[CONTROL_POINT][0] - IMAGE_WIDTH/2;
 
-            ImgSideSearch(Img_Store_p,Data_Path_p);   // 边线八邻域寻线
-
-            Img_Store_p -> ImgNum++;
-            Function_EN_p -> Loop_Kind_EN = JUDGE_LOOP;
-            cout << "CAMERA_CATCH_LOOP" << endl;
-            break;
+        if(abs(err) > 40)
+        {
+            PID_Servo.kp = SERVO_KP[3];
+            PID_Servo.ki = SERVO_KI[3];
+            PID_Servo.kd = SERVO_KD[3];
+            motor_L.setMotorRotate(1, 170000);
+            motor_R.setMotorRotate(1, 170000);
+        }
+        else if(abs(err) > 15 && abs(err) <= 40)
+        {
+            PID_Servo.kp = SERVO_KP[2];
+            PID_Servo.ki = SERVO_KI[2];
+            PID_Servo.kd = SERVO_KD[2];
+            motor_L.setMotorRotate(1, 165000);
+            motor_R.setMotorRotate(1, 165000);
+        }
+        else if(abs(err) > 5 && abs(err) <= 15)
+        {
+            PID_Servo.kp = SERVO_KP[1];
+            PID_Servo.ki = SERVO_KI[1];
+            PID_Servo.kd = SERVO_KD[1];
+            motor_L.setMotorRotate(1, 162000);
+            motor_R.setMotorRotate(1, 162000);
+        }
+        else
+        {
+            PID_Servo.kp = SERVO_KP[0];
+            PID_Servo.ki = SERVO_KI[0];
+            PID_Servo.kd = SERVO_KD[0];
+            motor_L.setMotorRotate(1, 160000);
+            motor_R.setMotorRotate(1, 160000);
         }
 
-        // 赛道状态机决策循环
-        while( Function_EN_p -> Loop_Kind_EN == JUDGE_LOOP )
-        {
-            Function_EN_p -> Loop_Kind_EN = Judge.TrackKind_Judge(Img_Store_p,Data_Path_p,Function_EN_p);  // 切换至赛道循环
-            cout << "JUDGE_LOOP" << endl;
-        }
+        float value = (int)PID_Servo.getValue(0, err);
+        cout << "\033c" << endl;
+        cout << err << endl;
+        cout << value << endl;
+        // // cout << encoder_L.pulseCounterUpdate() << endl;
+        // // cout << encoder_R.pulseCounterUpdate() << endl;
 
-        // 普通赛道主循环
-        while( Function_EN_p -> Loop_Kind_EN == COMMON_TRACK_LOOP )
-        {
-            if(Data_Path_p -> Circle_Track_Step == IN_PREPARE)
-            {
-                CircleTrack_Step_IN_Prepare_Stright(Img_Store_p,Data_Path_p);   // 准备入环补线
-            }
-            if(Data_Path_p -> Circle_Track_Step == OUT_2_STRIGHT)
-            {
-                Circle2CommonTrack(Img_Store_p,Data_Path_p);    // 出环转直线补线
-            }
-            ImgPathSearch(Img_Store_p,Data_Path_p); // 赛道路径线寻线
-            Judge.ServoDirAngle_Judge(Data_Path_p); // 舵机角度计算
-            Judge.MotorSpeed_Judge(Img_Store_p,Data_Path_p);    // 电机速度决策
-            Function_EN_p -> Loop_Kind_EN = CAMERA_CATCH_LOOP; // 切换至串口发送循环
-
-            // cout << "COMMON_TRACK_LOOP" << endl;
-        }
-
-        // 左右圆环赛道主循环
-        while( Function_EN_p -> Loop_Kind_EN == L_CIRCLE_TRACK_LOOP || Function_EN_p -> Loop_Kind_EN == R_CIRCLE_TRACK_LOOP )
-        {
-            switch(Data_Path_p -> Circle_Track_Step)
-            {
-                case IN_PREPARE:
-                {
-                    CircleTrack_Step_IN_Prepare(Img_Store_p,Data_Path_p);   // 准备入环补线
-                    break;
-                }
-                case IN:
-                {
-                    CircleTrack_Step_IN(Img_Store_p,Data_Path_p);   // 入环补线
-                    break;
-                }
-                case OUT:
-                {
-                    CircleTrack_Step_OUT(Img_Store_p,Data_Path_p);   // 出环补线
-                    break;
-                }
-            }
-            ImgPathSearch(Img_Store_p,Data_Path_p); // 赛道路径线寻线
-            Judge.ServoDirAngle_Judge(Data_Path_p); // 舵机角度计算
-            Judge.MotorSpeed_Judge(Img_Store_p,Data_Path_p);    // 电机速度决策
-            Function_EN_p -> Loop_Kind_EN = CAMERA_CATCH_LOOP; // 切换至串口发送循环
-            // cout << "CIRCLE_TRACK_L
+        servo.setServoRotate(value);
         
-        }
+        video.write(imgColor);
 
-        // 十字赛道主循环
-        while( Function_EN_p -> Loop_Kind_EN == ACROSS_TRACK_LOOP )
-        {
-            AcrossTrack(Img_Store_p,Data_Path_p);   // 十字赛道补线
-            ImgPathSearch(Img_Store_p,Data_Path_p); // 赛道路径线寻线
-            Judge.ServoDirAngle_Judge(Data_Path_p); // 舵机角度计算
-            Judge.MotorSpeed_Judge(Img_Store_p,Data_Path_p);    // 电机速度决策
-            Function_EN_p -> Loop_Kind_EN = CAMERA_CATCH_LOOP; // 切换至串口发送循环
-            // cout << "ACROSS_TRACK_LOOP" << endl;
-        }
+        frameCount++;
+        if(frameCount == 100000)
+            frameCount = 0;
+        cout << L_InflectionPointNum << "    " << R_InflectionPointNum << endl;
 
-        Motor_Control(L_motor,R_motor,1500,1500);
-        SteerControl(Data_Path_p->ServoDir,Data_Path_p->ServoAngle);
-        cout << Data_Path_p->ServoDir << endl;
-        cout << Data_Path_p->ServoAngle << endl;
+        // waitKey(1);
     }
 
     return 0;
 }
+
