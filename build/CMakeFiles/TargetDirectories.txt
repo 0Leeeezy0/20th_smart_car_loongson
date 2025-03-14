@@ -1,0 +1,3 @@
+/home/Sharespace/LOONGSON(NEW)/LOONGSON/build/CMakeFiles/LOONGSON.dir
+/home/Sharespace/LOONGSON(NEW)/LOONGSON/build/CMakeFiles/edit_cache.dir
+/home/Sharespace/LOONGSON(NEW)/LOONGSON/build/CMakeFiles/rebuild_cache.dir
