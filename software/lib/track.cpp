@@ -210,7 +210,7 @@ void longestWhiteCol(void)
 {
 	int L_side[2] = {0};
 	int R_side[2] = {0};
-    static int midX = 0;
+    static int midX = IMAGE_WIDTH/2;
 	
 	int maxWhiteNum = 0;				// 最长白列白色像素数量
 	int longestWhiteX = 0;			// 最长白列横坐标
